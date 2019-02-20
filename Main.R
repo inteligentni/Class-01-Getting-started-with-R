@@ -1,0 +1,672 @@
+# 
+# Getting started with R
+# Vladan Devedzic, Aug 20, 2017
+# 
+
+
+# Download R from https://cran.r-project.org/ and install it.
+# Download RStudio from https://www.rstudio.com/products/rstudio/download/ and install it.
+
+# Open new project in RStudio (File > New Project...).
+# Open new R script in the project (File > New File > R Script).
+
+
+# Get working directory
+getwd()
+
+# Set working directory (Session > Set Working Directory)
+setwd("K:/Vladan/Downloads/Intelligent Systems/R Workspace/Getting started with R (VD)")
+getwd()
+
+# Help
+?setwd
+help("setwd")
+
+# Install packages
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("caret")
+library(caret)
+
+
+############################################
+# Basic commands, operators and data types #
+############################################
+
+# Print a line of text in the console:
+# print("Something")
+print("Hi :)")
+
+# Naming and coding conventions: https://google.github.io/styleguide/Rguide.xml
+
+# Assignment statement: x <- <something>
+x <- 2
+x
+
+# Manipulating objects in the workspace:
+# ls()                      # list all objects in memory
+# rm(<o1>, <o2>, <o3>, ...) # remove one or more objects from memory by their names
+# rm(list = ls())           # remove all objects from memory (usually not recommended)
+ls()
+rm(x, y)
+
+# Operators:
+# +	  Add, 2 + 3 = 5
+# -	  Subtract, 5 - 2 = 3
+# *	  Multiply, 2 * 3 = 6
+# /	  Divide, 6 / 2 = 3
+# ^	  Exponent, 2 ^ 3 = 8
+# %%	Modulus operator, 9%%2 = 1
+# %/%	Integer division, 9 %/% 2 = 4
+# <	  Less than
+# >	  Greater than
+# =	  Equal to
+# <=	Less than or equal to
+# >=	Greater than or equal to
+# !=	Not equal to
+# !	  Not
+# |	  OR
+# &	  And
+
+# Expressions:
+# <x> / <y> - <z>^2 ...
+3.4 / 2 + 7^2
+
+# Vectors:
+# <y> <- c(<something1>, <something2>, <something3>, ...)
+# <y> <- rep(<something>, <times>)
+# <y> <- <int1>:<int2>
+# <y> <- seq(<value1>, <value2>, by = <step>)
+# The index of the first element in a vector is 1, not 0.
+y <- c(1, 2, 3)
+z <- c(1.2, 3)
+t <- 2:6
+w <- seq(3.2, 4.7, by = 0.2)
+
+w[3]
+w[]
+w
+
+# Matrices:
+# <m> <- matrix(c(3, 5, 7, 1, 9, 4), nrow = 3, ncol = 2, byrow = TRUE)
+# <m>.nrow <- nrow(<m>) # number of rows
+# <m>.ncol <- ncol(<m>) # number of columns
+# <m> <- t(<m>)         # transpose <m>
+# <m>[2,3]
+# <m>[2]
+# <m>[2, ]
+a <- matrix(8:1, nrow = 2, ncol = 4, byrow = TRUE)
+a
+a.nrow <- nrow(a)
+a.nrow
+a <- t(a)
+a
+a[1,2]
+a[2, ]
+a[2]
+a[]
+
+# Lists: ordered collections of elements of different types
+# <list> <- list(<e1.name> = <e1>, <e2.name> = <e2>, <e3.name> = <e3>, ...)
+# <list>[[<index>]]     # accessing list element by index, showing value only
+# <list>[<index>]       # accessing list element by index, showing both name and value
+# <list>$<element.name> # accessing list element by its name
+# is.list(<something>)                                  # Is <something> a list?
+# <combined.list> <- c(<list1>, <list2>, <list3>, ...)  # list concatenation
+# names(<list>)                           # names of list elements
+# <list>[names(<list>) == <element.name>] # all elements of a list having the same name
+# unlist(<list>)                          # convert list into a named character vector
+# unlist(<list>, use.names = FALSE)       # convert list into a character vector
+# append(<list>,                          # insert new element into an existing list, after index <n>
+#        list(<e1.name> = <e>),           # new element must be a list itself, that's why list(<e1.name> = <e>)
+#             <n>)                        # <n> is optional; if omitted, new element is appended at the end
+# <list>[[<n>]] <- NULL                   # remove <n>th element from <list>
+traveler1 <- list(adult = TRUE, passport = "P212123", age = 34)
+traveler1
+traveler1[[3]]
+traveler2 <- list(adult = FALSE, passport = "P4567756", age = 14)
+traveler2
+traveler2$age
+travelers <- c(traveler1, traveler2)
+travelers
+travelers[[3]]
+travelers[[5]]
+travelers[5]
+is.list(travelers)
+is.vector(travelers)
+names(travelers)
+travelers[names(travelers) == "age"]
+unlist(travelers)
+unlist(travelers, use.names = FALSE)
+age.of.travelers <- unlist(travelers[names(travelers) == "age"], use.names = FALSE)
+age.of.travelers
+length(traveler1)
+traveler1 <- append(traveler1, list(country = "AUS"), 2)
+length(traveler1)
+traveler1
+traveler1[[3]] <- NULL
+length(traveler1)
+traveler1
+
+# Data types: vector, factor, numeric, character, logical, data.frame, matrix, list, ...
+# class(<something>)                    # data type
+# mode(something), typeof(<something>)  # how a data item is internally stored in memory
+class(a)
+mode(a)
+typeof(a)
+typeof(2.3)
+
+# Factors:
+# b <- c(1, 2, 2, 2, 3, 1, 1, 4, 5, 4)
+# b.as.factor <- as.factor(b)
+# levels(b.as.factor)
+# f <- factor(c(1, 2, 3))
+# f <- gl(3,                                                    # gl() "generates levels" (here 3), i.e. factors
+#         1, length = 10, labels = c("One", "Two", "Three"))    # each level replicated 1 time, length(f) = 10
+b <- c(1, 1, 1, 2, 1, 1, 1, 1, 5, 4)
+b.as.factor <- as.factor(b)
+levels(b.as.factor)
+f <- gl(3, 1, length = 10, labels = c("One", "Two", "Three"))
+f
+f <- gl(3, 2, length = 10, labels = c("One", "Two", "Three"))
+f
+meal = factor(c("Lunch","Dinner"))
+meal
+meal = factor(c("Lunch","Dinner"), levels=c("Lunch","Dinner"))
+meal
+
+
+# Dataframes:
+# e.g., <dataframe> <- as.data.frame(<matrix>)
+# str(<dataframe>)
+a.data.frame <- as.data.frame(a)
+a.data.frame
+str(a.data.frame)
+
+
+#######################
+# Loops and branching #
+#######################
+
+# for, if, break, next:
+# for (<i> in <int vector>) {
+#   <line 1>
+#   <line 2>
+#   ...
+#   if (<logical condition>) {
+#     <line i1>
+#     <line i2>
+#     ...
+#     break       # break: exit the loop; next: skip the remaining lines in this iteration
+#   } 
+#   ...
+#   <line n>
+# }
+for (i in 1:10) {
+  if (i == 3) {
+    print("Done")
+    break
+  }
+  s <- paste(i,"is current index", sep = " ")
+  print(s)
+}
+
+# while, if-else, break, next:
+# <i> <- <initial value>
+# while (logical condition involving <i>) {
+#   <line 1>
+#   <line 2>
+#   ...
+#   if (<logical condition>) {
+#     <line i1>
+#     <line i2>
+#     ...
+#     break       # break: exit the loop; next: skip the remaining lines in this iteration
+#   } else {
+#     <line j1>
+#     <line j2>
+#     ...
+#   }
+#   ...
+#   <line n>
+#   <i> <- <modify <i>>
+# }
+i <- 1
+while (i <= 10) {
+  if (i == 5) {
+    i <- i + 1
+    next
+  } else {
+    print(paste(i, "is current index", sep = " "))
+    i <- i + 1
+  }
+}
+
+# ifelse(<condition>, v1, v2)   # can return a vector (if <condition> involves another vector)
+ifelse(1 < 6, TRUE, FALSE)
+ifelse(1 < 6, "<", "Not <")
+ifelse(1:10 < 6, 1, 2)
+
+
+###########
+# ggplot2 #
+###########
+
+# install.packages("ggplot2")
+# library(ggplot2)
+
+# Data to plot:
+actor.xy <- data.frame(year = factor(c(2014, 2015, 2016, 2017)), movies = (c(2, 3, 2, 1)))
+actor.xy
+
+# Bar graphs:
+# ggplot(data = <dataframe>, 
+#        aes(x = <column 1>, y = <column 2>, fill = <column 1>)) +  # fill = <column 1> is optional; no y for counts
+#   geom_bar(stat = "identity") +                                   # "identity" for values, "count" for counts
+#   xlab("<x-axis label>") + ylab("<y-axis label>") +
+#   ggtitle("<graph title>")
+actor.plot.set <- ggplot(data = actor.xy, aes(x = year, y = movies, fill = year))
+actor.plot.set + geom_bar(stat = "identity")
+actor.plot.set + 
+  geom_bar(stat = "identity") +
+  xlab("recent years") + ylab("# of movies") +
+  ggtitle("XY's recent movies")
+
+# Line graphs:
+# ggplot(data = <dataframe>, 
+#        aes(x = <column 1>, y = <column 2>, group = 1)) +  # group = 1: one line, all points connected
+#   geom_line(colour = "<colour>", linetype = "<linetype>", size = <line thickness>) + 
+#   geom_point(colour="<colour>", size = <point size>, shape = <point shape>, fill = "<point fill colour>") + 
+#   xlab("<x-axis label>") + ylab("<y-axis label>") +
+#   ggtitle("<graph title>")
+# All parameters in geom_line() and in geom_point() are optional.
+# The defaults are: colour = "black", linetype = "solid", size = 1, shape = 21 (circle), fill = "black"
+# See http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/ 
+# for more information on colors. 
+# See http://www.cookbook-r.com/Graphs/Shapes_and_line_types/  
+# for information on shapes and line types.
+actor.plot.set <- ggplot(data = actor.xy, aes(x = year, y = movies, group = 1))
+actor.plot.set + geom_line()
+actor.plot.set + geom_line() + geom_point()
+actor.plot.set + 
+  geom_line(colour = "blue", linetype = "dotted", size = 2) + 
+  geom_point(colour="green", size = 4, shape = 21, fill = "yellow")
+# geom_point(color="green", size = 8, shape = 18, fill = "yellow")
+
+
+######################################
+# Working with datasets / dataframes #
+######################################
+
+# Reading a dataset:
+# <dataframe> <- read.csv("<filename>", stringsAsFactors = FALSE)
+# str(<dataframe>)  # structure of <dataframe>, all variables/columns
+# head(<dataframe>) # the first few rows
+# tail(<dataframe>) # the last few rows
+the.beatles.songs <- read.csv("The Beatles songs dataset, v1.csv", 
+                              stringsAsFactors = FALSE)
+
+# Examining a dataframe:
+# str(<dataframe>)              # structure of <dataframe>, all variables/columns
+# dim(<dataframe>)              # showing dimensions (numbers of rows and columns) of a dataframe
+# names(<dataframe>)            # showing column names
+# head(<dataframe>)             # the first few rows
+# tail(<dataframe>)             # the last few rows
+# <dataframe>[ , ]              # the entire dataframe
+# <dataframe>                   # the entire dataframe
+# <dataframe>[<m>, ]            # m-th row
+# <dataframe>[ ,<n>]            # n-th column
+# summary(<dataframe>$<column>) # summarizing a variable/column values
+# fix(<dataframe>)              # editing a dataframe
+# new.df <- edit(<dataframe>)   # editing a dataframe and assigning the modified dataframe to another datavrame
+str(the.beatles.songs)
+dim(the.beatles.songs)
+names(the.beatles.songs)
+head(the.beatles.songs)
+tail(the.beatles.songs)
+the.beatles.songs[4, ]
+the.beatles.songs[ ,2]
+summary(the.beatles.songs$Duration)
+summary(the.beatles.songs$Title)
+summary(the.beatles.songs$Year)
+fix(the.beatles.songs)
+a.data.frame.1 <- edit(a.data.frame)
+
+# Examining a dataframe visually, with ggplot():
+the.beatles.songs.clean <- read.csv("The Beatles songs dataset, v1, no NAs.csv", 
+                              stringsAsFactors = FALSE)
+the.beatles.songs.clean$Year <- factor(the.beatles.songs.clean$Year)      # because write.csv/read.csv produces int's
+g1 <- ggplot(data = the.beatles.songs.clean, aes(x = Year, y = Duration, fill = Year))
+g1 + geom_bar(stat = "identity")
+g2 <- ggplot(data = the.beatles.songs.clean, aes(x = Year, fill = Year))
+g2 + geom_bar(stat = "count") +
+  xlab("Year") + ylab("No. of songs") +
+  ggtitle("The number Beatles songs per year")
+g3 <- ggplot(the.beatles.songs.clean[1:5, ], aes(x = Year, y = Duration, group = 1))
+g3 + geom_line(color = "orange", size = 2, linetype = "longdash") + 
+     geom_point(color = "red", shape = 25, size = 8, fill = "yellow")
+
+# Adding/Removing columns to/from a dataframe:
+# <dataframe>$<new column name> <- <default value>  # adding a new column (default values)
+# <dataframe>$<column name> <- NULL                 # removing a column
+the.beatles.songs$Not.on.album <- FALSE
+the.beatles.songs$Not.on.album <- NULL
+the.beatles.songs$On.album <- FALSE
+the.beatles.songs$On.album[the.beatles.songs$Album.debut != ""] <- TRUE
+
+# Adding a new row to a dataframe - the row must be a 1-line dataframe with the same column names:
+# <new row> <- data.frame(<column name 1> = <value 1>, <column name 2> = <value 2>,...)
+# <new data frame> <- rbind(<dataframe>, <new row>) # append new row to the end of the existing dataframe
+# <new data frame> <- rbind(<dataframe>[1:i, ],     # insert new row in the middle
+#                           <new row>,
+#                           <dataframe>[(i + 1):nrow(<dataframe>), ])
+new.song <- data.frame(the.beatles.songs[1, ])
+the.beatles.songs <- rbind(the.beatles.songs, new.song)
+the.beatles.songs <- rbind(the.beatles.songs[1:3, ],    # Rstudio keeps the original row numbers in View()
+                           new.song, 
+                           the.beatles.songs[4:nrow(the.beatles.songs), ])
+
+# Removing rows from a dataframe
+# <dataframe>[-i, ]                                 # show dataframe without i-th row
+# <dataframe>[-c(i, j, k), ]                        # show dataframe without rows i, j, k
+# <dataframe> <- <dataframe>[-i, ]                  # remove i-th row from dataframe
+# <dataframe> <- <dataframe>[-c(i, j, k), ]         # remove rows i, j, k from dataframe
+# <dataframe> <- <dataframe>[-(i:k), ]              # remove rows i to k from dataframe
+nrow(the.beatles.songs)
+the.beatles.songs <- the.beatles.songs[-nrow(the.beatles.songs), ]
+the.beatles.songs1 <- the.beatles.songs[-(305:310), ]
+the.beatles.songs <- the.beatles.songs[-(1:304), ]
+the.beatles.songs <- rbind(the.beatles.songs1, the.beatles.songs)
+
+# Changing column names:
+# colnames(<dataframe>)[i] <- "<new name>"
+colnames(the.beatles.songs)
+which(colnames(the.beatles.songs) == "Genre")
+colnames(the.beatles.songs)[which(colnames(the.beatles.songs) == "Genre")] <- "Song.genre"
+colnames(the.beatles.songs)[6] <- "Genre"
+
+# Changing row names:
+# rownames(<dataframe>)[i] <- "<new name>"
+# rownames(<dataframe>) <- c("<new name 1>", "<new name 2>",...)
+# rownames(<dataframe>) <- c(1, 2,...)
+# rownames(<dataframe>) <- list("<new name 1>", <numeric 2>,...)
+rownames(the.beatles.songs) <- paste("song", 1:nrow(the.beatles.songs))
+rownames(the.beatles.songs) <- c(1:nrow(the.beatles.songs))
+
+# Slicing and dicing dataframes:
+# <selection> <- <dataframe>[<some rows>, <some columns>]
+# <selection> <- <dataframe>[i:k, c("<column 1>", "<column 2>",...)]
+# <indexes> <- with(<dataframe>, which(<condition; can be complex>))  # a with()-which() selection, like an SQL query
+# <selection> <- <dataframe>[<indexes>, ]
+# <selection> <- subset(<dataframe>,                                  # subset() is much like SELECT... FROM... WHERE
+#                       <logical condition for the rows to return>, 
+#                       <select statement for the columns to return>) # can be omitted; column names not prefixed by <dataframe>$
+# library(dplyr)
+# <selection> <- filter(<dataframe>,                                  # filter() is from dplyr
+#                       <logical condition for the rows to return>)   # can include column referencing, not-prefixed by <dataframe>$
+selected.songs <- the.beatles.songs[1:5, c("Title", "Album.debut")]
+View(selected.songs)
+indexes <- with(the.beatles.songs, which((Year == "1964") & (Lead.vocal != "McCartney")))
+selected.songs <- the.beatles.songs[indexes, ]
+songs.1958 <- subset(the.beatles.songs, Year == 1958, c("Title", "Album.debut"))
+library(dplyr)
+filter(the.beatles.songs, 
+       as.integer(rownames(the.beatles.songs)) < 33 & Title == "12-Bar Original")
+
+# Shuffling rows/columns:
+# <dataframe> <- <dataframe>[sample(nrow(<dataframe>)), ]   # shuffle row-wise
+# <dataframe> <- <dataframe>[, sample(ncol(<dataframe>))]   # shuffle column-wise
+the.beatles.songs <- the.beatles.songs[sample(nrow(the.beatles.songs)), ]
+the.beatles.songs <- the.beatles.songs[, sample(ncol(the.beatles.songs))]
+
+# Replacing selected values in a column:
+# <selected var name> <- <dataframe>$<column> == <selected value>
+# <dataframe>$<column>[<selected var name>] <- <new value>
+empty.album.debut <- the.beatles.songs$Album.debut == ""
+empty.album.debut
+the.beatles.songs$Album.debut[empty.album.debut] <- "empty"
+the.beatles.songs$Album.debut[empty.album.debut] <- ""
+
+# Applying functions to all elements in rows/columns of a dataframe:
+# apply(<dataframe>, <1 | 2>, <function(x) {...}>)  # 1 | 2: apply function(x) by row | column
+# mapply(function(x, y, ...) {...}, <dataframe>$<column 1>, <dataframe>$<column 2>, ...)
+#     <dataframe>$<column 1> corresponds to x, <dataframe>$<column 2> corresponds to y, ...
+#     alternatively:  <f> <- function(x, y, ...) {...}
+#                     mapply(<f>, <dataframe>$<column 1>, <dataframe>$<column 2>, ...)
+#                       # <f> is just the function name (!)
+#                       # <dataframe>$<column 1> corresponds to x, <dataframe>$<column 2> corresponds to y, ..., 
+#                       # or can be columns from different dataframes, "independent" vectors,... (of the same length)
+# sapply(<vector>, FUN = function(x) {...})   # function(x): function to be applied to each element of <vector>
+apply(the.beatles.songs[1, ], 1, function(x) {print(x)})
+apply(the.beatles.songs[1, ], 2, function(x) {print(x)})
+mapply(function(x, y) {print(x); print(y)}, 
+       the.beatles.songs[111:113, ]$Title, 
+       the.beatles.songs[111:113, ]$Year)
+sapply(the.beatles.songs[1, ], FUN = function(x) {print(x)})
+
+# Partitioning a dataframe:
+# install.packages('caret')
+# library(caret)
+# set.seed(<any specific int>)  # allows for repeating the randomization process exactly
+# <indexes> <- createDataPartition(<dataframe>$<column>, p = 0.8, list = FALSE)
+# <partition 1> <- <dataframe>[<indexes>, ]
+# <partition 2> <- <dataframe>[-<indexes>, ]
+library(caret)
+set.seed(222)
+indexes <- createDataPartition(the.beatles.songs$Year, p = 0.8, list = FALSE)
+the.beatles.songs.p1 <- the.beatles.songs[indexes, ]
+the.beatles.songs.p2 <- the.beatles.songs[-indexes, ]
+
+# Saving a dataset (modified or newly created dataset):
+# write.csv(x = <dataframe>, file = "<filename>", row.names = F)  # do not include the row names (row numbers) column
+# saveRDS(object = <dataframe or another R object>, file = "<filename>")  # save R object for the next session
+# <dataframe or another R object> <- readRDS(file = "<filename>")         # restore R object in the next session
+write.csv(the.beatles.songs.p2, "p2.csv", row.names = F)
+saveRDS(the.beatles.songs.p2, "p2.RData")
+p2 <- readRDS("p2.RData")
+
+
+########################
+# Data type conversion #
+########################
+
+# Covered above:
+# b <- c(1, 2, 2, 2, 3, 1, 1, 4, 5, 4)
+# b.as.factor <- as.factor(b)
+# levels(b.as.factor)
+# e.g., <dataframe> <- as.data.frame(<matrix>)
+# str(<dataframe>)
+
+# Difference between character and factor vectors:
+# summary(<character vector>)
+# summary(as.factor(<character vector>))
+class(the.beatles.songs$Year)
+summary(the.beatles.songs$Year)
+summary(as.factor(the.beatles.songs$Year))
+
+# Convert numeric to factor:
+# <dataframe>$<numeric column with few different values> <- 
+#     factor(<dataframe>$<numeric column with few different values>, 
+#             levels = c(0, 1, ..., k), labels = c("<l1>", "<l2>", ..., "<lk>"))
+the.beatles.songs1 <- the.beatles.songs
+the.beatles.songs1$Billboard.hit <- 0
+the.beatles.songs1$Billboard.hit[!is.na(the.beatles.songs1$Top.50.Billboard)] <- 1
+the.beatles.songs1$Billboard.hit <- 
+  factor(the.beatles.songs1$Billboard.hit, levels = c(0,1), labels = c("N", "Y"))
+class(the.beatles.songs1$Billboard.hit)
+summary(the.beatles.songs1$Billboard.hit)
+levels(the.beatles.songs1$Billboard.hit)
+
+# Example: fixing some values in the.beatles.songs$Year
+summary(the.beatles.songs$Year)
+summary(as.factor(the.beatles.songs$Year))
+the.beatles.songs$Year[the.beatles.songs$Year == "196?"] <- "1969"
+the.beatles.songs$Year[the.beatles.songs$Year == "1977/1994"] <- "1977"
+the.beatles.songs$Year[the.beatles.songs$Year == "1980/1995"] <- "1980"
+summary(as.factor(the.beatles.songs$Year))
+
+# Example: creating the.beatles.songs$Billboard.hit column as factor
+the.beatles.songs$Billboard.hit <- 0
+the.beatles.songs$Billboard.hit[!is.na(the.beatles.songs$Top.50.Billboard)] <- 1
+the.beatles.songs$Billboard.hit <- 
+  factor(the.beatles.songs$Billboard.hit, levels = c(0,1), labels = c("N", "Y"))
+
+
+#######################
+# Working with tables #
+#######################
+
+# The table() function:
+# table(<var>)  # typically a factor or an integer var
+table(the.beatles.songs1$Year)
+table(the.beatles.songs1$Top.50.Billboard)
+table(the.beatles.songs1$Billboard.hit)
+table(the.beatles.songs1$Billboard.hit)[1]
+x <- table(the.beatles.songs1$Billboard.hit)[1]
+x
+y <- as.numeric(x)
+y
+
+# The prop.table() function:
+# prop.table(table(<var>))
+# round(prop.table(table(<var>)), digits = <n>)
+prop.table(table(the.beatles.songs1$Billboard.hit))
+round(prop.table(table(the.beatles.songs1$Billboard.hit)), digits = 2)
+
+# Row and column margins:
+# table(<var1>, <var2>)                                   # <var1>, <var2>: usually factors or integers
+# table(<rows title> = <var1>, <columns title> = <var2>)  # add common titles for rows/columns
+# prop.table(table(<var1>, <var2>), margin = 1)           # all row margins are 1.0
+# prop.table(table(<var1>, <var2>), margin = 2)           # all column margins are 1.0
+table(the.beatles.songs$Billboard.hit, the.beatles.songs$Year)
+table(Hit = the.beatles.songs$Billboard.hit, Year = the.beatles.songs$Year)
+round(prop.table(table(the.beatles.songs$Billboard.hit, the.beatles.songs$Year), 1), digits = 2)
+round(prop.table(table(the.beatles.songs$Billboard.hit, the.beatles.songs$Year), 2), digits = 2)
+round(prop.table(table(the.beatles.songs$Billboard.hit, the.beatles.songs$Year)), digits = 2)
+
+# Example: converting the.beatles.songs$Year to factor and showing it in tables
+factor(the.beatles.songs$Year)
+the.beatles.songs$Year <- as.factor(the.beatles.songs$Year)
+class(the.beatles.songs$Year)
+summary(the.beatles.songs$Year)
+prop.table((table(the.beatles.songs$Year)))
+round(prop.table((table(the.beatles.songs$Year))), digits = 2)
+
+# The xtabs() function:
+# xtabs(~<column 1> + <column 2>, <dataframe>)
+xtabs(~Billboard.hit + Year, the.beatles.songs)
+
+
+########################
+# Working with vectors #
+########################
+
+# Differences in initializing vectors and dataframe columns:
+# <vector> <- rep(<value>, <times>)
+# <vector> <- <value>
+# <dataframe>$<column> <- rep(<value>, <times>)
+# <dataframe>$<column> <- <value>
+v <- rep(0, 5)
+v
+v <- 2
+v
+df <- data.frame(a = c(1, 2, 3), b = c(4, 5, 6))
+df
+df$a <- rep(1, 3)
+df
+df$a <- 0
+df
+
+# Counting the number of elements with the values of <x> in a vector:
+# 1.  <table> <- table(<vector>)
+#     <table>
+#     <table>[names(<table>) == <x>]
+# 2.  sum(<vector> == <x>)
+# 3.  length(which(<vector> == <x>))    # which() is like WHERE in SQL
+v <- c(1, 2, 1, 3, 2, 4, 5, 1, 3, 1)
+t <- table(v)
+t
+t[names(t) == 1]
+t[names(t) == "1"]
+sum(v == 1)
+length(which(v == 1))
+
+# Appending an element to a vector:
+# <vector> <- append(<vector>, <element>)   # type conversion occurs if <element> is of different type than v[i]
+# <vector> <- append(<vector>, <element>, 
+#                           after = <n>)    # insert <=> append at a desired location
+# <vector> <- append(<vector>, NA)
+v <- c(1, 2, 1, 3, 2, 4, 5, 1, 3, 1)
+v
+v <- append(v, NA)
+v <- append(v, NA, after = 5)
+v
+v <- append(v, "s")
+v
+
+# Removing NAs from a vector in NA-sensitive functions:
+# <function>(<vector>, na.rm = TRUE)
+v <- c(1, 2, 1, 3, 2, 4, 5, 1, 3, 1)
+v
+v <- append(v, NA)
+v <- append(v, NA)
+mean(v)
+mean(v, na.rm = TRUE)
+
+# Selecting items matching criteria from a numeric vector (added check for NAs and NaNs):
+# <numeric vector> <- c(<n1>, <n2>, <n3>, ..., NA, ...NaN)
+# <selected> <- <numeric vector>[<logical criterion> & !is.na(<numeric vector>)]  # is.na() is TRUE for both NA and NaN
+# is.na() is the only way to test if <something> is NA (<something> == NA does not work)
+v <- c(1, 2, 1, 3, NA, 4, 5, 1, 3, NaN, 1)
+v
+v <- v[v > 1 & !is.na(v)]
+v
+
+
+########################
+# Working with strings #
+########################
+
+# Some of the basic string functions:
+# nchar(<s>)                              # string length
+# str_length(<s>)                         # string length; str_length() is from stringr
+# substr(<s>, <start index>, <end index>) # substring
+# toupper(<s>)                            # to upper case letters
+# tolower(<s>)                            # to lower case letters
+# grepl(<s1>, <s2>)                       # contains; TRUE if <s2> contains <s1>
+# str_detect(<s1>, <s2>)                  # contains; TRUE if <s1> contains <s2>; str_detect() is from stringr
+# paste(<s1>, <s2>, sep = "")             # concatenate (result: <s1><s2>; <s1> <s2>, if sep = "" omitted)
+# sub(<s1>, <s2>, <s>)                    # substring replacement: replace <s1> in <s> with <s2>
+# strsplit(<s>, <regex>)                  # split (the type of the result is list)
+title <- the.beatles.songs$Title[13]
+title
+nchar(title)
+str_length(title)
+grepl("You", title)
+str_detect(title, "You")
+
+# Splitting strings to words:
+# strsplit(<s>, <regex>)                  # split (the type of the result is list)
+title <- the.beatles.songs$Title[13]
+words.in.title <- strsplit(title, " ")
+words.in.title
+words.in.title <- strsplit(title, " ")
+words.in.title
+words.in.title <- strsplit("All  My    Loving", " ")
+words.in.title
+words.in.title <- unlist(words.in.title)
+words.in.title <- words.in.title[words.in.title != ""]
+words.in.title
+title <- paste(words.in.title[1], words.in.title[2], words.in.title[3])
+title
+title <- paste(words.in.title[1], words.in.title[2], words.in.title[3], sep = "")
+title
+
+
+###################################
+# Resources, readings, references #
+###################################
+
+# R Tutorials, http://www.endmemo.com/program/R/
+# R: A Beginner's Guide (by Sharon Machlis), http://www.tfrec.wsu.edu/TFREConly/r4beginners_v3.pdf
+# Graphs with ggplot2, http://www.cookbook-r.com/Graphs/
